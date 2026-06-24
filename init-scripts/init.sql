@@ -1,0 +1,2 @@
+CREATE DATABASE acct_db;
+CREATE DATABASE auth_db;

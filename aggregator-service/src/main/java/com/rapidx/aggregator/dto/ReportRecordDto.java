@@ -1,0 +1,16 @@
+package com.rapidx.aggregator.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import java.time.LocalDateTime;
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class ReportRecordDto {
+    private Long id;
+    private String title;
+    private String content;
+    private LocalDateTime generatedAt;
+}

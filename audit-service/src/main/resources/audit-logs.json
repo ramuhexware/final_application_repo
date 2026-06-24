@@ -1,0 +1,32 @@
+[
+  {
+    "action": "USER_LOGIN",
+    "username": "john_doe",
+    "details": "User logged in successfully from IP 192.168.1.1",
+    "timestamp": "2026-06-18T10:15:30"
+  },
+  {
+    "action": "ACCOUNT_UPDATE",
+    "username": "admin",
+    "details": "Updated credit limit for account 987654",
+    "timestamp": "2026-06-18T11:20:45"
+  },
+  {
+    "action": "ROLE_ASSIGNMENT",
+    "username": "manager",
+    "details": "Assigned ROLE_ADMIN to user alice",
+    "timestamp": "2026-06-18T12:05:00"
+  },
+  {
+    "action": "USER_LOGOUT",
+    "username": "john_doe",
+    "details": "User logged out voluntarily",
+    "timestamp": "2026-06-18T13:00:10"
+  },
+  {
+    "action": "ACCOUNT_CREATION",
+    "username": "admin",
+    "details": "Created new savings account 123456 for user bob",
+    "timestamp": "2026-06-18T14:30:22"
+  }
+]

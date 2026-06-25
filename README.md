@@ -44,6 +44,7 @@ graph TD
 | **`email-service`** | `8083` | Spring Boot, External API REST | Simulates email notification sending and forwards payloads to external test webhook endpoints (`httpbin.org`). |
 | **`audit-service`** | `8084` | Spring Boot, MongoDB (`audit_db`) | Captures reactive compliance audit logs. |
 | **`history-service`** | `8085` | Spring Boot, IBM DB2 (`histdb`) | Logs system transition history in an enterprise DB2 warehouse. |
+| **`report-service`** | `8086` | Spring Boot, Oracle Database | Compiles audit reports and handles server-side File IO (import/export CSV). |
 
 ### 🗄️ Infrastructure Datastores & Brokers
 
@@ -80,6 +81,10 @@ The system orchestrates operations across multiple components using three commun
     4.  **Invoke Partner Gateway**: Call external gateways or webhooks (e.g. `httpbin.org/post`) using REST.
     5.  **Reply**: Cache the response log and reply to the OSB client.
 
+### 4. File IO Data Processing (CSV Export & Import)
+*   **Export**: When users trigger report export, `report-service` retrieves all reports from the Oracle Database, formats them as a CSV stream, writes it locally to the server folder `exported_reports/` using `java.io.FileWriter`, and streams it back to the client as a download.
+*   **Import**: When users upload a CSV template, `report-service` caches the file in `uploaded_reports/` via `MultipartFile.transferTo`, parses the file using `java.io.BufferedReader` and `java.io.FileReader`, and saves all new entries to the database.
+
 ---
 
 ## 📮 API Endpoints Summary
@@ -106,6 +111,12 @@ The system orchestrates operations across multiple components using three commun
 ### 5. Auditing (`audit-service` - `8084`)
 *   `POST /api/audit` — Log compliance audit events to MongoDB.
 *   `GET /api/audit` — Fetch reactive audit streams.
+
+### 6. Report Generation (`report-service` - `8086`)
+*   `GET /api/reports` — Fetch all report records from Oracle DB.
+*   `POST /api/reports` — Save new report record to Oracle DB.
+*   `GET /api/reports/export` — Export database report records to a server-side CSV file and download it.
+*   `POST /api/reports/import` — Upload and parse a CSV file to save report records to Oracle DB.
 
 ---
 
@@ -199,7 +210,7 @@ Once you have launched the backend docker containers and served the UI portal at
 2.  Input a query (e.g. `OIM`) into the search bar, or choose `aggregator-service` in the dropdown filter.
 3.  **Verification**: Confirm the log grid updates reactively to show matching audit logs persisted in MongoDB.
 
-### 6. Test Report Generation (`report-service`)
+### 6. Test Report Generation & File IO (`report-service`)
 1.  Navigate to the **Reports Center (report)** tab.
 2.  Input report fields:
     *   **Report Title**: `Q2 Reconciliations`
@@ -209,3 +220,12 @@ Once you have launched the backend docker containers and served the UI portal at
     *   Confirm the database success message flashes.
     *   Verify the report registry table updates with the new entry.
     *   Check the "Database Connection" card to verify database parameters.
+5.  Test **File Export**:
+    *   Under the **File IO Operations** card, click **Export to CSV**.
+    *   **Verification**: A CSV download is triggered (e.g., `reports_export.csv` or `mock_reports_export.csv`).
+    *   Check the server directory `exported_reports/` to verify that the CSV file was saved to the server storage.
+6.  Test **File Import**:
+    *   Select a valid CSV file (containing `Title,Content Findings,Generated At` headers) using the file input.
+    *   Click **Upload & Import**.
+    *   **Verification**: The new reports are parsed (either server-side if online, or client-side if offline) and loaded into the reports table.
+    *   Check the server directory `uploaded_reports/` to verify that the imported CSV file was cached on the server storage.

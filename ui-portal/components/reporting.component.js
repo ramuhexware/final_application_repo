@@ -62,7 +62,32 @@ class ReportingComponent extends HTMLElement {
                                 <span style="font-family:monospace; font-size:11px; max-width: 140px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">jdbc:oracle:thin:@oracle-db:1521/FREEPDB1</span>
                             </div>
                         </div>
+
+                        <!-- File IO Operations Card -->
+                        <div class="card" style="display: flex; flex-direction: column; gap: 14px;">
+                            <h4 style="font-weight: 600; font-size: 14px; color: var(--color-indigo);"><i class="fa-solid fa-file-csv"></i> File IO Operations</h4>
+                            
+                            <!-- Export Section -->
+                            <div style="display: flex; flex-direction: column; gap: 8px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                                <span style="font-size: 13px; font-weight: 500;">Export Reports</span>
+                                <button id="btnExportReports" class="btn" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; font-size: 13px;">
+                                    <i class="fa-solid fa-file-arrow-down"></i> Export to CSV
+                                </button>
+                                <div id="exportStatusBox" style="display:none; font-size:11px; text-align:center; padding: 6px; border-radius: 6px;"></div>
+                            </div>
+                            
+                            <!-- Import Section -->
+                            <div style="display: flex; flex-direction: column; gap: 8px;">
+                                <span style="font-size: 13px; font-weight: 500;">Import Reports</span>
+                                <input type="file" id="importFileInput" accept=".csv" style="font-size: 12px; background: var(--bg-dark); border: 1px solid var(--border-color); padding: 5px; border-radius: 6px; width: 100%; color: var(--text-secondary);">
+                                <button id="btnImportReports" class="btn btn-secondary" style="width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px; padding: 8px 12px; font-size: 13px;">
+                                    <i class="fa-solid fa-file-arrow-up"></i> Upload & Import
+                                </button>
+                                <div id="importStatusBox" style="display:none; font-size:11px; text-align:center; padding: 6px; border-radius: 6px;"></div>
+                            </div>
+                        </div>
                     </div>
+
 
                     <!-- Reports list table -->
                     <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
@@ -116,6 +141,82 @@ class ReportingComponent extends HTMLElement {
                     this.renderBody();
                 } catch (err) {
                     alert(`Error compiling report: ${err.message}`);
+                }
+            });
+        }
+
+        const btnExport = this.querySelector('#btnExportReports');
+        const exportStatus = this.querySelector('#exportStatusBox');
+        if (btnExport) {
+            btnExport.addEventListener('click', async () => {
+                try {
+                    btnExport.disabled = true;
+                    btnExport.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Exporting...';
+                    const res = await apiService.exportReports();
+                    if (exportStatus) {
+                        exportStatus.style.display = 'block';
+                        exportStatus.style.background = 'rgba(20,184,166,0.1)';
+                        exportStatus.style.color = 'var(--color-teal)';
+                        exportStatus.innerHTML = res.serverExported 
+                            ? '<i class="fa-solid fa-circle-check"></i> Exported & saved to server <code>exported_reports/</code>!' 
+                            : '<i class="fa-solid fa-circle-info"></i> CSV generated & downloaded!';
+                        setTimeout(() => { exportStatus.style.display = 'none'; }, 5000);
+                    }
+                } catch (err) {
+                    alert(`Export failed: ${err.message}`);
+                } finally {
+                    btnExport.disabled = false;
+                    btnExport.innerHTML = '<i class="fa-solid fa-file-arrow-down"></i> Export to CSV';
+                }
+            });
+        }
+
+        const btnImport = this.querySelector('#btnImportReports');
+        const fileInput = this.querySelector('#importFileInput');
+        const importStatus = this.querySelector('#importStatusBox');
+        if (btnImport && fileInput) {
+            btnImport.addEventListener('click', async () => {
+                const file = fileInput.files[0];
+                if (!file) {
+                    alert("Please select a CSV file to import first.");
+                    return;
+                }
+                try {
+                    btnImport.disabled = true;
+                    btnImport.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Importing...';
+                    if (importStatus) {
+                        importStatus.style.display = 'block';
+                        importStatus.style.background = 'rgba(234,179,8,0.1)';
+                        importStatus.style.color = 'var(--color-yellow)';
+                        importStatus.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Processing File...';
+                    }
+                    
+                    const res = await apiService.importReports(file);
+                    
+                    if (importStatus) {
+                        importStatus.style.background = 'rgba(16,185,129,0.1)';
+                        importStatus.style.color = 'var(--color-green)';
+                        importStatus.innerHTML = res.serverImported
+                            ? `<i class="fa-solid fa-circle-check"></i> Server-side parsed: ${res.count} records imported! Saved in <code>uploaded_reports/</code>.`
+                            : `<i class="fa-solid fa-circle-check"></i> Mock parsed: ${res.count} records imported!`;
+                        setTimeout(() => { importStatus.style.display = 'none'; }, 6000);
+                    }
+                    
+                    fileInput.value = '';
+                    
+                    // Reload reports
+                    this.reports = await apiService.getReports();
+                    this.renderBody();
+                } catch (err) {
+                    if (importStatus) {
+                        importStatus.style.display = 'block';
+                        importStatus.style.background = 'rgba(239,68,68,0.1)';
+                        importStatus.style.color = 'var(--color-red)';
+                        importStatus.innerHTML = `<i class="fa-solid fa-circle-xmark"></i> ${err.message}`;
+                    }
+                } finally {
+                    btnImport.disabled = false;
+                    btnImport.innerHTML = '<i class="fa-solid fa-file-arrow-up"></i> Upload & Import';
                 }
             });
         }

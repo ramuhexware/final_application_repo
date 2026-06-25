@@ -1,0 +1,108 @@
+<div class="view-container">
+    <div style="display: grid; grid-template-columns: 1.2fr 1.8fr; gap: 24px;">
+        
+        <!-- BPEL Trigger Form -->
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+                <h3 style="font-weight: 600; font-size: 16px;">Trigger Orchestration</h3>
+                <form (submit)="onInvokeBpel($event)">
+                    <div class="form-group">
+                        <label for="bpelAccId">Account ID</label>
+                        <input type="number" id="bpelAccId" [(ngModel)]="bpelAccId" name="bpelAccId" placeholder="e.g. 5051" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="bpelAccName">Account Name</label>
+                        <input type="text" id="bpelAccName" [(ngModel)]="bpelAccName" name="bpelAccName" placeholder="e.g. Securitization Escrow" required>
+                    </div>
+                    <button type="submit" class="btn" style="width:100%; margin-top:8px;">
+                        <i class="fa-solid fa-play"></i> Invoke BPEL Process
+                    </button>
+                </form>
+            </div>
+
+            <!-- Step visualizer panel -->
+            <div class="card">
+                <h3 style="font-weight: 600; font-size: 16px; margin-bottom:12px;">Process Activity Sequence Monitor</h3>
+                <div class="bpel-sequence">
+                    <div class="bpel-step" [class.completed]="activeSteps[1]">
+                        <div class="bpel-step-badge">1</div>
+                        <div class="bpel-step-info">
+                            <div class="bpel-step-title">OSB Proxy Endpoint Inbound</div>
+                            <div class="bpel-step-desc">Proxy receives client HTTP POST request</div>
+                        </div>
+                    </div>
+                    <div class="bpel-step" [class.completed]="activeSteps[2]">
+                        <div class="bpel-step-badge">2</div>
+                        <div class="bpel-step-info">
+                            <div class="bpel-step-title">OSB Message Transformation</div>
+                            <div class="bpel-step-desc">Applies XQuery/XSLT wrapper mapping</div>
+                        </div>
+                    </div>
+                    <div class="bpel-step" [class.completed]="activeSteps[3]">
+                        <div class="bpel-step-badge">3</div>
+                        <div class="bpel-step-info">
+                            <div class="bpel-step-title">BPEL Receive & Variables Assign</div>
+                            <div class="bpel-step-desc">Initializes instance tracking variables</div>
+                        </div>
+                    </div>
+                    <div class="bpel-step" [class.completed]="activeSteps[4]">
+                        <div class="bpel-step-badge">4</div>
+                        <div class="bpel-step-info">
+                            <div class="bpel-step-title">Invoke Partner Link: Oracle DB</div>
+                            <div class="bpel-step-desc">Persists RUNNING status tracking logs</div>
+                        </div>
+                    </div>
+                    <div class="bpel-step" [class.completed]="activeSteps[5]">
+                        <div class="bpel-step-badge">5</div>
+                        <div class="bpel-step-info">
+                            <div class="bpel-step-title">Invoke Partner Link: Downstream Gateway</div>
+                            <div class="bpel-step-desc">Dispatches webhook request to target broker</div>
+                        </div>
+                    </div>
+                    <div class="bpel-step" [class.completed]="activeSteps[6]">
+                        <div class="bpel-step-badge">6</div>
+                        <div class="bpel-step-info">
+                            <div class="bpel-step-title">BPEL Process Reply (Completed)</div>
+                            <div class="bpel-step-desc">Persists COMPLETED state and replies to proxy</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Instance Table list -->
+        <div class="card" style="display:flex; flex-direction:column; gap:16px;">
+            <h3 style="font-weight: 600; font-size: 16px;">Orchestration Process Instance Registry</h3>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Process Instance ID</th>
+                            <th>Process Name</th>
+                            <th>Status</th>
+                            <th>Input Payload</th>
+                            <th>Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let inst of instances">
+                            <td style="font-family:'JetBrains Mono', monospace; font-size:12px; color:var(--color-indigo);">{{ inst.processId }}</td>
+                            <td>{{ inst.processName }}</td>
+                            <td>
+                                <span style="font-size:12px; font-weight:600; padding:4px 8px; border-radius:12px; 
+                                             background:rgba(16,185,129,0.15); color:var(--color-green);">
+                                    {{ inst.status }}
+                                </span>
+                            </td>
+                            <td style="font-family:'JetBrains Mono', monospace; font-size:11px; color:var(--text-secondary); max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" [title]="inst.payload">
+                                {{ inst.payload }}
+                            </td>
+                            <td style="color:var(--text-secondary); font-size:12px;">{{ inst.createdAt | date:'short' }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </div>
+</div>

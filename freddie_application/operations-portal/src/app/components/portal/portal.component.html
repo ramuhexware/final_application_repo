@@ -1,0 +1,66 @@
+<div class="view-container">
+    <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+        <!-- Sync Trigger form -->
+        <div class="card" style="display: flex; flex-direction: column; gap: 16px; height: fit-content;">
+            <h3 style="font-weight: 600; font-size: 16px;">Trigger OIM Synchronization</h3>
+            
+            <form (submit)="onLaunchOimSync($event)">
+                <div class="form-group">
+                    <label for="accName">Account Name</label>
+                    <input type="text" id="accName" [(ngModel)]="accName" name="accName" placeholder="e.g. JPMorgan Cash Account" required>
+                </div>
+                <div class="form-group">
+                    <label for="cpName">Counterparty Name</label>
+                    <input type="text" id="cpName" [(ngModel)]="cpName" name="cpName" placeholder="e.g. JPMorgan Chase" required>
+                </div>
+                <button type="submit" class="btn" style="width: 100%; margin-top: 8px;">
+                    <i class="fa-solid fa-rotate"></i> Launch OIM Sync
+                </button>
+            </form>
+
+            <div style="margin-top: 8px;">
+                <h4 style="font-size:13px; font-weight:600; margin-bottom:8px;">OIM Sync Response:</h4>
+                <pre class="console-output">{{ oimConsoleOutput }}</pre>
+            </div>
+        </div>
+
+        <!-- Counterparty Table -->
+        <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-weight: 600; font-size: 16px;">Aggregated Counterparty Registry</h3>
+                <button class="btn btn-secondary" (click)="onRefresh()"><i class="fa-solid fa-arrows-rotate"></i> Refresh</button>
+            </div>
+            
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Account Name</th>
+                            <th>Counterparty</th>
+                            <th>OIM Sync State</th>
+                            <th>Last Update</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let acc of accounts">
+                            <td style="font-weight: 500;">{{ acc.id }}</td>
+                            <td>{{ acc.name }}</td>
+                            <td>{{ acc.counterpartyName }}</td>
+                            <td>
+                                <span style="font-size:12px; font-weight:600; padding:4px 8px; border-radius:12px;"
+                                      [ngStyle]="{
+                                        'background': acc.status === 'SYNCHRONIZED' ? 'rgba(16,185,129,0.15)' : 'rgba(239,68,68,0.15)',
+                                        'color': acc.status === 'SYNCHRONIZED' ? 'var(--color-green)' : 'var(--color-red)'
+                                      }">
+                                    {{ acc.status }}
+                                </span>
+                            </td>
+                            <td style="color:var(--text-secondary);">{{ acc.updatedAt }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="view-container">
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
+        <!-- Tomcat Config status -->
+        <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+            <h3 style="font-weight: 600; font-size: 16px;">Tomcat J2EE Servlet Web Container</h3>
+            
+            <div style="display:flex; flex-direction:column; gap:12px;">
+                <div style="padding:12px; background:rgba(245,158,11,0.08); border:1px solid var(--color-amber); border-radius:8px; font-size:13px;">
+                    <strong style="color:var(--color-amber);"><i class="fa-solid fa-triangle-exclamation"></i> Legacy Technology Warning</strong>
+                    <p style="margin-top:6px; color:var(--text-secondary); line-height: 1.4;">
+                        This application module is deployed inside an isolated Tomcat 9.0 servlet engine using Servlet 3.1 APIs and Java Server Pages (JSP).
+                    </p>
+                </div>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:8px 0;">
+                    <span style="color:var(--text-secondary);">Server Software</span>
+                    <span style="font-weight:600;">Apache Tomcat / 9.0.86</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:8px 0;">
+                    <span style="color:var(--text-secondary);">Java version</span>
+                    <span style="font-weight:600;">1.8.0_392 (Java 8)</span>
+                </div>
+                <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border-color); padding:8px 0;">
+                    <span style="color:var(--text-secondary);">Context Path</span>
+                    <span style="font-weight:600; font-family:monospace;">/legacy-service</span>
+                </div>
+            </div>
+
+            <div style="margin-top: 10px;">
+                <button class="btn" (click)="onPingLegacy()" style="width:100%;">
+                    <i class="fa-solid fa-bolt"></i> Ping Legacy JSP Endpoint
+                </button>
+            </div>
+            <pre class="console-output">{{ legacyConsoleOutput }}</pre>
+        </div>
+
+        <!-- JSP Frame simulator -->
+        <div class="card" style="display: flex; flex-direction: column; gap: 16px; border: 1px solid var(--color-amber);">
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+                <h3 style="font-weight: 600; font-size: 16px; color: var(--color-amber);">JSP In-Browser Sandbox Frame</h3>
+                <span style="font-size:12px; padding:4px 8px; border-radius:12px; background:rgba(245,158,11,0.15); color:var(--color-amber); font-weight:600;">
+                    HTML Rendered
+                </span>
+            </div>
+            
+            <div style="flex-grow:1; background:#ffffff; border-radius:12px; padding:20px; color:#333; font-family:sans-serif; min-height: 250px; box-shadow: inset 0 0 10px rgba(0,0,0,0.1);">
+                <div style="border-bottom: 2px solid #3f51b5; padding-bottom: 8px; margin-bottom: 12px;">
+                    <h2 style="margin:0; font-size:18px; color:#3f51b5;">Legacy Account Administration Portal</h2>
+                    <small style="color:#777;">Powered by Java Server Pages (.jsp)</small>
+                </div>
+                
+                <table style="width:100%; border-collapse:collapse; margin-top:10px; color:#333; font-size:13px;">
+                    <thead>
+                        <tr style="background:#e0e0e0; text-align:left;">
+                            <th style="padding:6px; color:#333; font-weight:600;">Param Name</th>
+                            <th style="padding:6px; color:#333; font-weight:600;">System Setting</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr style="border-bottom:1px solid #ddd;">
+                            <td style="padding:6px; font-weight:600; color:#333;">jdbc/legacyDS</td>
+                            <td style="padding:6px; font-family:monospace; color:#3f51b5;">jdbc:oracle:thin:@oracle-db:1521/FREEPDB1</td>
+                        </tr>
+                        <tr style="border-bottom:1px solid #ddd;">
+                            <td style="padding:6px; font-weight:600; color:#333;">OSB Endpoint</td>
+                            <td style="padding:6px; font-family:monospace; color:#3f51b5;">http://soa-service:8087/api/osb/proxy</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <div style="margin-top:20px; padding:10px; background:#e8f0fe; border-radius:6px; font-size:12px; border-left:4px solid #1a73e8; color:#333;">
+                    <strong>System Notification:</strong> ActiveMQ connection established to SF-BA0352-EBMQueue.local.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

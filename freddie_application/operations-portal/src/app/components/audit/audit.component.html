@@ -1,0 +1,51 @@
+<div class="view-container">
+    <div class="card" style="display: flex; flex-direction: column; gap: 16px;">
+        <!-- Filter Section -->
+        <div style="display: flex; justify-content: space-between; align-items: center; gap: 20px;">
+            <div style="display: flex; align-items: center; gap: 12px; flex-grow: 1; max-width: 400px;">
+                <i class="fa-solid fa-magnifying-glass" style="color: var(--text-secondary);"></i>
+                <input type="text" [(ngModel)]="searchQuery" (input)="applyFilters()" placeholder="Filter by action, service, or details..." style="width: 100%;">
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <select [(ngModel)]="selectedService" (change)="applyFilters()">
+                    <option value="ALL">All Services</option>
+                    <option value="account-service">account-service</option>
+                    <option value="aggregator-service">aggregator-service</option>
+                    <option value="soa-service">soa-service</option>
+                </select>
+                <button class="btn" (click)="onRefresh()"><i class="fa-solid fa-rotate"></i> Refresh</button>
+            </div>
+        </div>
+
+        <!-- Log Table Grid -->
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Audit ID</th>
+                        <th>Action</th>
+                        <th>Service</th>
+                        <th>Details</th>
+                        <th>Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr *ngFor="let log of filteredLogs">
+                        <td style="font-family:'JetBrains Mono', monospace; color:var(--color-teal);">{{ log.id }}</td>
+                        <td>
+                            <span style="font-size:12px; font-weight:600; padding:4px 8px; border-radius:6px; background:rgba(255,255,255,0.05); border:1px solid var(--border-color);">
+                                {{ log.action }}
+                            </span>
+                        </td>
+                        <td style="font-weight: 500;">{{ log.service }}</td>
+                        <td style="color:var(--text-secondary);">{{ log.details }}</td>
+                        <td style="color:var(--text-secondary);">{{ log.timestamp }}</td>
+                    </tr>
+                    <tr *ngIf="filteredLogs.length === 0">
+                        <td colspan="5" style="text-align:center; color:var(--text-secondary);">No audit logs matching filters found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

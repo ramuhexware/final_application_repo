@@ -1,0 +1,41 @@
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand-section">
+            <i class="fa-solid fa-bolt"></i>
+            <span class="brand-title">RapidX</span>
+        </div>
+        <ul class="nav-menu">
+            <li>
+                <a routerLink="/dashboard" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+            <li>
+                <a href="http://localhost:9000" class="nav-item">
+                    <i class="fa-solid fa-gears"></i>
+                    <span>Operations Hub</span>
+                </a>
+            </li>
+        </ul>
+        <div class="sidebar-footer">
+            <span>Freddie Mac RapidX v21.0</span>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Top Bar -->
+        <header class="top-bar">
+            <h2 class="page-title">Enterprise Dashboard</h2>
+            <div class="user-profile">
+                <span class="avatar">CC</span>
+                <span style="font-size: 14px; font-weight: 500;">Admin User</span>
+            </div>
+        </header>
+
+        <!-- Dynamic Content Router Outlet -->
+        <router-outlet></router-outlet>
+    </main>
+</div>

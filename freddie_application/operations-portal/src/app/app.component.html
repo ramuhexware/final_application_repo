@@ -1,0 +1,85 @@
+<div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="brand-section">
+            <i class="fa-solid fa-microchip"></i>
+            <span class="brand-title">RapidX Ops</span>
+        </div>
+        
+        <ul class="nav-menu">
+            <li>
+                <!-- External Link back to Dashboard Portal -->
+                <a href="http://localhost:8880" class="nav-item">
+                    <i class="fa-solid fa-chart-line"></i>
+                    <span>Dashboard Portal</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/auth" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <span>Auth Gateway (auth)</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/accounts" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-wallet"></i>
+                    <span>Accounts Hub (account)</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/registry" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-circle-nodes"></i>
+                    <span>OIM Sync Portal</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/bpel" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-diagram-project"></i>
+                    <span>BPEL Orchestration</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/audit" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-list-check"></i>
+                    <span>Audit Logs</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/reports" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-file-invoice"></i>
+                    <span>Reports Center (report)</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/legacy" routerLinkActive="active" class="nav-item">
+                    <i class="fa-solid fa-server"></i>
+                    <span>Legacy JSP Portal</span>
+                </a>
+            </li>
+        </ul>
+        
+        <div class="sidebar-footer">
+            <p>RapidX v15.0-Angular</p>
+            <p>Java 8 & Reactive Services</p>
+        </div>
+    </aside>
+
+    <!-- Main Section -->
+    <main class="main-content">
+        <header class="top-bar">
+            <h2 class="page-title">{{ getHeaderTitle() }}</h2>
+            <div style="display: flex; align-items: center; gap: 16px;">
+                <div class="user-profile">
+                    <div class="avatar">A</div>
+                    <div style="display: flex; flex-direction: column;">
+                        <span style="font-size: 14px; font-weight: 500;">Admin User</span>
+                        <span style="font-size: 11px; color: var(--text-secondary); font-weight: 600;">ROLE_ADMIN</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Router Outlet -->
+        <router-outlet></router-outlet>
+    </main>
+</div>
